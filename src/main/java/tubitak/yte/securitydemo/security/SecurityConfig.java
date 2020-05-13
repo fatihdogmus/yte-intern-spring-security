@@ -1,5 +1,6 @@
 package tubitak.yte.securitydemo.security;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -7,7 +8,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
@@ -20,22 +20,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.authenticationProvider(new DaoAuthenticationProvider());
 	}
 
-	@Bean
-	public UserDetailsService userDetailsService(UserRepository userRepository) {
-		return new CustomUserDetailsService(userRepository);
-	}
-
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http
 				.authorizeRequests()
+				.antMatchers("/login").permitAll()
 				.anyRequest().authenticated()
 				.and()
-				.httpBasic();
+				.formLogin().disable()
+				.logout().disable()
+				.httpBasic().disable()
+				.csrf().disable();
 	}
 
 	@Bean
-	public UserDetailsManager userDetailsManager(final UserRepository userRepository) {
+	public UserDetailsManager customUserDetailsManager(final UserRepository userRepository) {
 		CustomUserDetailsManager customUserDetailsManager = new CustomUserDetailsManager(userRepository, passwordEncoder());
 		customUserDetailsManager.createUser(new Users(1L, "admin", "admin", null));
 		customUserDetailsManager.createUser(new Users(2L, "user", "user", null));
@@ -51,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider(
-			final UserDetailsManager userDetailsManager) {
+			@Qualifier("customUserDetailsManager") final UserDetailsManager userDetailsManager) {
 		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 		daoAuthenticationProvider.setUserDetailsService(userDetailsManager);
 		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
