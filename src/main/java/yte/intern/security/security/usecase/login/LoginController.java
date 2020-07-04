@@ -1,4 +1,4 @@
-package tubitak.yte.securitydemo.security.login;
+package yte.intern.security.security.usecase.login;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ public class LoginController {
 	}
 
 	@PostMapping
-	public JwtResponse login(@Valid @RequestBody final JwtRequest jwtRequest) {
-		return loginService.authenticate(jwtRequest);
+	public LoginResponse login(@Valid @RequestBody final LoginRequest loginRequest) {
+		return loginService.authenticate(loginRequest);
 	}
 }

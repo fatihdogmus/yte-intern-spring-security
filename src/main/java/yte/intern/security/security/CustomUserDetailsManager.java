@@ -1,5 +1,6 @@
-package tubitak.yte.securitydemo.security;
+package yte.intern.security.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,17 +8,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.stereotype.Service;
+import yte.intern.security.security.entity.Users;
+import yte.intern.security.security.repository.UserRepository;
 
+@Service
+@RequiredArgsConstructor
 public class CustomUserDetailsManager implements UserDetailsManager {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-
-	public CustomUserDetailsManager(final UserRepository userRepository,
-									final PasswordEncoder passwordEncoder) {
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-	}
 
 	@Override
 	public void createUser(final UserDetails user) {
@@ -47,8 +47,7 @@ public class CustomUserDetailsManager implements UserDetailsManager {
 		if(passwordEncoder.matches(oldPassword, user.getPassword())) {
 			user.setPassword(passwordEncoder.encode(newPassword));
 			userRepository.save(user);
-		}
-		else {
+		} else {
 			throw new BadCredentialsException("Wrong old password is given!");
 		}
 	}
@@ -60,7 +59,7 @@ public class CustomUserDetailsManager implements UserDetailsManager {
 
 	@Override
 	public UserDetails loadUserByUsername(final String username) {
-		return userRepository.findByUsername(username).orElseThrow(
-				() -> new UsernameNotFoundException(username));
+		return userRepository.findByUsername(username)
+				.orElseThrow(() -> new UsernameNotFoundException(username));
 	}
 }

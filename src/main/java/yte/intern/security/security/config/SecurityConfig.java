@@ -1,6 +1,6 @@
-package tubitak.yte.securitydemo.security;
+package yte.intern.security.security.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -8,16 +8,20 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import yte.intern.security.security.CustomUserDetailsManager;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private final CustomUserDetailsManager userDetailsManager;
+	private final PasswordEncoder passwordEncoder;
+
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(new DaoAuthenticationProvider());
+	protected void configure(AuthenticationManagerBuilder auth) {
+		auth.authenticationProvider(authenticationProvider());
 	}
 
 	@Override
@@ -33,27 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable();
 	}
 
-	@Bean
-	public UserDetailsManager customUserDetailsManager(final UserRepository userRepository) {
-		CustomUserDetailsManager customUserDetailsManager = new CustomUserDetailsManager(userRepository, passwordEncoder());
-		customUserDetailsManager.createUser(new Users(1L, "admin", "admin", null));
-		customUserDetailsManager.createUser(new Users(2L, "user", "user", null));
-		customUserDetailsManager.createUser(new Users(3L, "sys", "sys", null));
-
-		return customUserDetailsManager;
-	}
 
 	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider(
-			@Qualifier("customUserDetailsManager") final UserDetailsManager userDetailsManager) {
+	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
 		daoAuthenticationProvider.setUserDetailsService(userDetailsManager);
-		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
 		return daoAuthenticationProvider;
 	}
+
 }

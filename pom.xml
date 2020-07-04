@@ -14,6 +14,10 @@
     <name>security-demo</name>
     <description>Demo project for Spring Security</description>
 
+    <properties>
+        <java.version>14</java.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

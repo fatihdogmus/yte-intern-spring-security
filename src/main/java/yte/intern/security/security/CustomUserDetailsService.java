@@ -1,8 +1,9 @@
-package tubitak.yte.securitydemo.security;
+package yte.intern.security.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import yte.intern.security.security.repository.UserRepository;
 
 public class CustomUserDetailsService implements UserDetailsService {
 

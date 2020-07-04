@@ -1,4 +1,4 @@
-package tubitak.yte.securitydemo.security;
+package yte.intern.security.security.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class Users implements UserDetails, CredentialsContainer {
 	private String username;
 	private String password;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_AUTHORITIES",
 			joinColumns = @JoinColumn(name = "USER_ID"),
 			inverseJoinColumns = @JoinColumn(name = "AUTHORITRY_ID"))
