@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import yte.intern.security.security.CustomUserDetailsManager;
 import yte.intern.security.security.entity.Users;
-import yte.intern.security.security.usecase.login.JwtUtil;
+import yte.intern.security.security.util.JwtUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

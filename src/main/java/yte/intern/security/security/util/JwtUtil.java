@@ -1,8 +1,7 @@
-package yte.intern.security.security.usecase.login;
+package yte.intern.security.security.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -12,6 +11,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
 import static java.util.stream.Collectors.toList;
 
 public class JwtUtil {
@@ -23,7 +23,7 @@ public class JwtUtil {
 				.claim("authorities", getAuthorities(user))
 				.setIssuedAt(new Date())
 				.setExpiration(calculateExpirationDate(expirationDay))
-				.signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+				.signWith(hmacShaKeyFor(secretKey.getBytes()))
 				.compact();
 	}
 
@@ -46,7 +46,7 @@ public class JwtUtil {
 
 	public static String extractUsername(final String jwtToken, final String secretKey) {
 		Claims claims = Jwts.parserBuilder()
-				.setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+				.setSigningKey(hmacShaKeyFor(secretKey.getBytes()))
 				.build()
 				.parseClaimsJws(jwtToken)
 				.getBody();
