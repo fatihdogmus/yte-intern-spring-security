@@ -22,7 +22,7 @@ public class Users implements UserDetails, CredentialsContainer {
 	private String username;
 	private String password;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "USER_AUTHORITIES",
 			joinColumns = @JoinColumn(name = "USER_ID"),
 			inverseJoinColumns = @JoinColumn(name = "AUTHORITRY_ID"))

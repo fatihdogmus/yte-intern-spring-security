@@ -1,5 +1,6 @@
 package yte.intern.security.security.usecase.login;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
@@ -41,5 +42,15 @@ public class JwtUtil {
 				.toInstant();
 
 		return Date.from(expirationTime);
+	}
+
+	public static String extractUsername(final String jwtToken, final String secretKey) {
+		Claims claims = Jwts.parserBuilder()
+				.setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+				.build()
+				.parseClaimsJws(jwtToken)
+				.getBody();
+
+		return claims.getSubject();
 	}
 }

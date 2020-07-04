@@ -8,7 +8,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import yte.intern.security.security.CustomUserDetailsManager;
 
 @EnableWebSecurity
@@ -18,6 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final CustomUserDetailsManager userDetailsManager;
 	private final PasswordEncoder passwordEncoder;
+	private final JwtRequestFilter jwtRequestFilter;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
@@ -31,6 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/login").permitAll()
 				.anyRequest().authenticated()
 				.and()
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
 				.formLogin().disable()
 				.logout().disable()
 				.httpBasic().disable()
