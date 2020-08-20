@@ -3,54 +3,57 @@ package yte.intern.security.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import yte.intern.security.security.CustomUserDetailsManager;
+import yte.intern.security.security.CustomUserDetailsService;
 
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final CustomUserDetailsManager userDetailsManager;
-	private final PasswordEncoder passwordEncoder;
-	private final JwtRequestFilter jwtRequestFilter;
+	private final CustomUserDetailsService userDetailsService;
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) {
-		auth.authenticationProvider(authenticationProvider());
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		PasswordEncoder passwordEncoder = passwordEncoder();
+//		auth.inMemoryAuthentication()
+//				.withUser("admin")
+//				.password(passwordEncoder.encode("admin"))
+//				.authorities("ADMIN")
+//				.roles("ADMIN")
+//				.and()
+//				.withUser("user")
+//				.password(passwordEncoder.encode("user"))
+//				.authorities("USER")
+//				.and()
+//				.passwordEncoder(passwordEncoder);
+//
+//		System.out.println(passwordEncoder.encode("hebele"));
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 	}
-
-	@Override
-	protected void configure(final HttpSecurity http) throws Exception {
-		http
-				.authorizeRequests()
-				.antMatchers("/login").permitAll()
-				.anyRequest().authenticated()
-				.and()
-				.sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-				.formLogin().disable()
-				.logout().disable()
-				.httpBasic().disable()
-				.csrf().disable();
-	}
-
 
 	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-		daoAuthenticationProvider.setUserDetailsService(userDetailsManager);
-		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-		return daoAuthenticationProvider;
+	public PasswordEncoder passwordEncoder() {
+		return NoOpPasswordEncoder.getInstance();
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		super.configure(http);
+//		http
+//				.authorizeRequests()
+//				.antMatchers("/login").permitAll()
+//				.antMatchers("/user").hasAnyAuthority("ADMIN", "USER")
+//				.antMatchers("/admin").hasAuthority("ADMIN")
+//				.and()
+//				.formLogin();
 	}
 
 }

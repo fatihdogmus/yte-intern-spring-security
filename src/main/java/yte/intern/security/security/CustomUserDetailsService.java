@@ -3,21 +3,15 @@ package yte.intern.security.security;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import yte.intern.security.security.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	private final UserRepository userRepository;
-
-	public CustomUserDetailsService(final UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
-
 	@Override
-	public UserDetails loadUserByUsername(final String username)
-			throws UsernameNotFoundException {
-		return userRepository.findByUsername(username).orElseThrow(
-				() -> new UsernameNotFoundException(username)
-		);
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return new CustomUser(username,username,new ArrayList<>());
 	}
 }
