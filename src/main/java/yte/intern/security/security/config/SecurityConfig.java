@@ -3,6 +3,8 @@ package yte.intern.security.security.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import yte.intern.security.security.CustomUserDetailsService;
+import yte.intern.security.service.CustomUserDetailsService;
 
 @EnableWebSecurity
 @Configuration
@@ -22,12 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		PasswordEncoder passwordEncoder = passwordEncoder();
 //		auth.inMemoryAuthentication()
 //				.withUser("admin")
 //				.password(passwordEncoder.encode("admin"))
-//				.authorities("ADMIN")
-//				.roles("ADMIN")
+//				.authorities("ADMIN","ROLE_ADMIN")
 //				.and()
 //				.withUser("user")
 //				.password(passwordEncoder.encode("user"))
@@ -35,8 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //				.and()
 //				.passwordEncoder(passwordEncoder);
 //
-//		System.out.println(passwordEncoder.encode("hebele"));
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		auth.authenticationProvider(authenticationProvider());
 	}
 
 	@Bean
@@ -44,16 +43,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return NoOpPasswordEncoder.getInstance();
 	}
 
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		var daoAuthenticationProvider = new DaoAuthenticationProvider();
+		daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+
+		return daoAuthenticationProvider;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		super.configure(http);
-//		http
-//				.authorizeRequests()
-//				.antMatchers("/login").permitAll()
-//				.antMatchers("/user").hasAnyAuthority("ADMIN", "USER")
-//				.antMatchers("/admin").hasAuthority("ADMIN")
-//				.and()
-//				.formLogin();
+		http
+				.authorizeRequests()
+				.antMatchers("/login").permitAll()
+				.and()
+				.formLogin();
 	}
 
 }

@@ -19,7 +19,7 @@ public class TestController {
 	}
 
 	@GetMapping("/admin")
-	@PreAuthorize("hasAuthority('ADMIN') && hasRole('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String admin() {
 		return "Ben adminim!";
 	}
