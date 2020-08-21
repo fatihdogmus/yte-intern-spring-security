@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import yte.intern.security.security.CustomUserDetailsManager;
-import yte.intern.security.security.entity.Users;
+import yte.intern.security.usecase.user.entity.Users;
 import yte.intern.security.security.util.JwtUtil;
 
 import javax.servlet.FilterChain;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-	@Value(value = "${security.secretKey}")
+	@Value(value = "${security.jwt.secret-key}")
 	private String secretKey;
 
 	private final CustomUserDetailsManager userDetailsManager;

@@ -5,12 +5,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import yte.intern.security.security.entity.Users;
-import yte.intern.security.security.repository.UserRepository;
+import yte.intern.security.usecase.user.entity.Users;
+import yte.intern.security.usecase.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +58,6 @@ public class CustomUserDetailsManager implements UserDetailsManager {
 
 	@Override
 	public UserDetails loadUserByUsername(final String username) {
-		return userRepository.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException(username));
+		return userRepository.findByUsername(username);
 	}
 }

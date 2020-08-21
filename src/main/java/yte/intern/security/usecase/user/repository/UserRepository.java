@@ -1,13 +1,11 @@
-package yte.intern.security.security.repository;
+package yte.intern.security.usecase.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import yte.intern.security.security.entity.Users;
-
-import java.util.Optional;
+import yte.intern.security.usecase.user.entity.Users;
 
 public interface UserRepository extends JpaRepository<Users, Long> {
 
-	Optional<Users> findByUsername(String username);
+	Users findByUsername(String username);
 
 	void deleteByUsername(String username);
 

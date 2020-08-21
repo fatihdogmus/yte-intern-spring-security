@@ -1,4 +1,4 @@
-package yte.intern.security.security.usecase.login;
+package yte.intern.security.usecase.login.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package yte.intern.security.security.entity;
+package yte.intern.security.usecase.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,5 +23,10 @@ public class Authority implements GrantedAuthority {
 	@GeneratedValue
 	private Long id;
 
+	@ManyToMany(mappedBy = "authorities")
+	private Set<Users> users;
+
 	private String authority;
+
+
 }
