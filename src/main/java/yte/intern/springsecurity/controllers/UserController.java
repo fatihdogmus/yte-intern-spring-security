@@ -12,7 +12,7 @@ public class UserController {
         return "Ben user sayfasıyım!";
     }
 
-    @PreAuthorize("hasAuthority('READ_ADMIN_PAGE') && hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/admin")
     public String admin() {
         return "Ben admin sayfasıyım";
