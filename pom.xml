@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.2</version>
+        <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>yte.intern</groupId>
@@ -15,7 +15,7 @@
     <description>Demo project for Spring Security</description>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>18</java.version>
     </properties>
 
     <dependencies>
