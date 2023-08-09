@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import yte.intern.springsecurity.login.entity.Authority;
-import yte.intern.springsecurity.login.entity.CustomUser;
+import yte.intern.springsecurity.login.entity.Users;
 import yte.intern.springsecurity.login.repository.UserRepository;
 
 import jakarta.annotation.PostConstruct;
@@ -22,8 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @PostConstruct
     public void init() {
-        userRepository.save(new CustomUser(null, "user", passwordEncoder.encode("user"), List.of(new Authority("USER"))));
-        userRepository.save(new CustomUser(null, "admin", passwordEncoder.encode("admin"), List.of(new Authority("USER"), new Authority("ADMIN"))));
+        userRepository.save(new Users(null, "user", passwordEncoder.encode("user"), List.of(new Authority("USER"))));
+        userRepository.save(new Users(null, "admin", passwordEncoder.encode("admin"), List.of(new Authority("USER"), new Authority("ADMIN"))));
     }
 
     @Override

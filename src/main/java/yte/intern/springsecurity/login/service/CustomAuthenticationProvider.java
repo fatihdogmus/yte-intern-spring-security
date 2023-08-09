@@ -20,8 +20,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = (String) authentication.getPrincipal();
+        String password = (String) authentication.getCredentials();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (passwordEncoder.matches((String) authentication.getCredentials(), userDetails.getPassword())) {
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
             return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         }
         throw new BadCredentialsException("Wrong credentials");

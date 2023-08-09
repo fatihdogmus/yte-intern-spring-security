@@ -19,11 +19,15 @@ public class LoginService {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password());
 
         Authentication authenticatedAuthentication = authenticationManager.authenticate(token);
+        if (authenticatedAuthentication.isAuthenticated()) {
 
-        SecurityContext newContext = SecurityContextHolder.createEmptyContext();
-        newContext.setAuthentication(authenticatedAuthentication);
-        SecurityContextHolder.setContext(newContext);
+            SecurityContext newContext = SecurityContextHolder.createEmptyContext();
+            newContext.setAuthentication(authenticatedAuthentication);
+            SecurityContextHolder.setContext(newContext);
 
-        return "Authentication is successful";
+            return "Authentication is successful";
+        }
+        return "Authentication failed";
+
     }
 }

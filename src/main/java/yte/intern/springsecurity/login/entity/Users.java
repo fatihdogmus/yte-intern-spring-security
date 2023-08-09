@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class CustomUser implements UserDetails {
+public class Users implements UserDetails {
 
     @Id
     @GeneratedValue

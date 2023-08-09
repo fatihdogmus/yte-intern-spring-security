@@ -7,6 +7,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import yte.intern.springsecurity.login.service.CustomAuthenticationProvider;
 
 @Configuration
@@ -15,13 +16,14 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests()
-                .antMatchers("/login").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .formLogin().disable()
-                .logout().disable()
-                .csrf().disable()
+        return http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(new AntPathRequestMatcher("/login"))
+                        .permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(formLogin -> formLogin.disable())
+                .logout(logout -> logout.disable())
+                .csrf(csrf -> csrf.disable())
                 .build();
     }
 
