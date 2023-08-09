@@ -10,7 +10,7 @@ import yte.intern.springsecurity.login.entity.Authority;
 import yte.intern.springsecurity.login.entity.CustomUser;
 import yte.intern.springsecurity.login.repository.UserRepository;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 
 @Service

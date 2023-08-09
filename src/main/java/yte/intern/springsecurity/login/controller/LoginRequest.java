@@ -1,6 +1,6 @@
 package yte.intern.springsecurity.login.controller;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public record LoginRequest(
         @NotEmpty
