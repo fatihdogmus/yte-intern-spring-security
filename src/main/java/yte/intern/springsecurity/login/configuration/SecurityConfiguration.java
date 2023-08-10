@@ -7,6 +7,10 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import yte.intern.springsecurity.login.service.CustomAuthenticationProvider;
 
@@ -24,11 +28,17 @@ public class SecurityConfiguration {
                 .formLogin(formLogin -> formLogin.disable())
                 .logout(logout -> logout.disable())
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.requireExplicitAuthenticationStrategy(false))
                 .build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(CustomAuthenticationProvider customAuthenticationProvider) {
         return new ProviderManager(customAuthenticationProvider);
+    }
+
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new DelegatingSecurityContextRepository(new RequestAttributeSecurityContextRepository(), new HttpSessionSecurityContextRepository());
     }
 }
