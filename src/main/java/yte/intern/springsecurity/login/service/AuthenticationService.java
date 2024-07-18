@@ -14,7 +14,7 @@ import yte.intern.springsecurity.login.controller.LoginRequest;
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
@@ -34,6 +34,11 @@ public class LoginService {
         }
         return "Authentication failed";
 
+    }
+
+    public void logout() {
+        SecurityContextHolder.clearContext();
+        saveContext();
     }
 
     private void saveContext() {
